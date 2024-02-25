@@ -1,0 +1,206 @@
+
+#include<iostream>
+#include<vector>
+#include<cassert>
+using namespace std;
+
+class Car
+{
+private:
+	string _model;
+	string _vendor;
+	string _company;
+	double _price;
+public:
+
+	Car(string model,string vendor,string company,double price)
+	{
+		SetModel(model);
+		SetCompany(company);
+		SetVendor(vendor);
+		SetPrice(price);
+	}
+
+	void SetModel(string model)
+	{
+		if (model.size() > 0)
+			_model = model;
+		else
+			assert(!"car model is not given");
+	}
+
+	void SetVendor(string vendor)
+	{
+		if (vendor.size() > 0)
+			_vendor = vendor;
+		else
+			assert(!"car vendor is not given");
+	}
+
+	void SetCompany(string company)
+	{
+		if (company.size() > 0)
+			_company = company;
+		else
+			assert(!"company name is not given");
+	}
+
+	void SetPrice(double price)
+	{
+		if (price > 2000)
+			_price = price;
+		else
+			assert(!"car price must be at least 2000");
+	}
+
+	string GetModel() { return _model; }
+	string GetVendor() { return _vendor; }
+	string GetCompany() { return _company; }
+	double GetPrice() { return _price; }
+
+	virtual void print()
+	{
+		cout << endl;
+		cout << "Model: " << _model << endl;
+		cout << "Vendor: " << _vendor << endl;
+		cout << "Company: " << _company << endl;
+		cout << "Car Price: " << _price << endl;
+	}
+
+};
+
+class Manual:public Car
+{
+	bool _hasClutchPedal;
+public:
+
+	Manual(string model,string vendor,string company,double price,bool hasClutchPedal):Car(model,vendor,company,price)
+	{
+		_hasClutchPedal = hasClutchPedal;
+	}
+
+	bool GetHasClutchPedal() { return _hasClutchPedal; }
+
+	void print() override
+	{
+		Car::print();
+		cout << "Has clutch pedal: " << _hasClutchPedal << endl;
+	}
+
+	virtual void ShowFeature()
+	{
+		cout << "manual transmission" << endl;
+	}
+};
+
+class Automatic:public Car
+{
+	string _performance;
+public:
+	Automatic(string model, string vendor, string company, double price,string performance):Car(model, vendor, company, price)
+	{
+		SetPerformance(performance);
+	}
+	 
+	void SetPerformance(string performance)
+	{
+		if (performance.size() > 0)
+			_performance = performance;
+		else
+			assert(!"car performance is not given");
+	}
+
+	string GetPerformance() { return _performance; }
+
+	void print() override
+	{
+		Car::print();
+		cout << "Performance: " << _performance << endl;
+	}
+
+	virtual void ShowFeature()
+	{
+		cout << "Safer and more comfortable" << endl;
+	}
+};
+
+class BMW:public Automatic
+{
+	string _drivingMode;
+public:
+	BMW(string model, string vendor, string company, double price, string performance,string drivingMode):Automatic(model,vendor,company,price,performance)
+	{
+		SetDrivingMode(drivingMode);
+	}
+
+	void SetDrivingMode(string mode)
+	{
+		if (mode.size() > 0)
+			_drivingMode = mode;
+		else
+			assert(!"diriving mode is not given");
+	}
+
+	string GetDrivingMode() { return _drivingMode; }
+
+	void print() override
+	{
+		Automatic::print();
+		cout << "Driving mode: " << _drivingMode << endl;
+	}
+
+	void ShowFeature() override
+	{
+		cout << "multizone-climate control" << endl;
+	}
+
+};
+
+class VAZ :public Manual
+{
+	string _fuelType;
+public:
+	VAZ(string model, string vendor, string company, double price, bool hasClutchPedal, string fuelType ):Manual(model,vendor,company,price,hasClutchPedal)
+	{
+		SetFuelType(fuelType);
+	}
+
+	void SetFuelType(string fuelType)
+	{
+		if (fuelType.size() > 0) _fuelType = fuelType;
+		else
+			assert(!"fuel type is not given");
+	}
+
+	string GetFuelType() { return _fuelType; }
+
+	void print() override
+	{
+		Manual::print();
+		cout << "Fuel type: " << _fuelType << endl;
+	}
+
+	void ShowFeature() override
+	{
+		cout << "Has 8 valves" << endl;
+	}
+};
+
+
+
+int main()
+{
+	vector<Car*>cars;
+
+	cars.push_back(new Manual("vaz07", "lada", "lada", 2500, true));
+	cars.push_back(new Automatic("mercedes 2019", "mercedes", "mercedes benz", 30000, "high"));
+
+	for (size_t i = 0; i < cars.size(); i++)
+	{
+		cars[i]->print();
+	}
+
+	for (size_t i = 0; i < cars.size(); i++)
+		delete cars[i];
+
+}
